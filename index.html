@@ -6,9 +6,12 @@
     <title>ShellOS | The Handmade Distro</title>
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --text-color: #cccccc;
-            --accent-color: #00ff41; /* Terminal Green */
+            /* The "Raw TTY" Palette */
+            --bg-color: #000000;       /* Pure Black */
+            --text-color: #aaaaaa;     /* Dim Gray (standard stdout) */
+            --accent-color: #ffffff;   /* Pure White (highlights) */
+            --border-color: #333333;   /* Dark Gray (borders) */
+            
             --header-font: 'Courier New', Courier, monospace;
             --body-font: 'Lucida Console', Monaco, monospace;
         }
@@ -25,22 +28,24 @@
             font-family: var(--body-font);
             line-height: 1.6;
             padding: 20px;
+            /* Hide scrollbar for immersion, usually */
+            scrollbar-color: #333 #000;
         }
 
         /* Container to center everything */
         .container {
             max-width: 800px;
             margin: 0 auto;
-            border: 1px solid #333;
+            border: 1px solid var(--border-color);
             padding: 40px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            background-color: #050505; /* Very subtle separation from body */
         }
 
         /* Header Styling */
         header {
-            text-align: center;
+            text-align: left; /* TTYs align left */
             margin-bottom: 40px;
-            border-bottom: 2px dashed #333;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
         }
 
@@ -51,19 +56,33 @@
             margin-bottom: 10px;
         }
 
+        /* The prompt simulation */
+        .prompt-line {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        h1::before {
+            content: './';
+            color: #555;
+        }
+
         h1::after {
-            content: '_';
-            animation: blink 1s infinite;
+            content: ' █';
+            color: var(--accent-color);
+            animation: blink 1s steps(1) infinite;
         }
 
         h2 {
-            color: #fff;
-            border-left: 4px solid var(--accent-color);
-            padding-left: 10px;
+            color: var(--accent-color);
             margin-top: 30px;
             margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            border-left: 3px solid #555;
+            padding-left: 15px;
         }
 
         p {
@@ -74,82 +93,88 @@
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
         .tool-badge {
-            background: #1a1a1a;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
+            background: #000;
+            border: 1px solid #444;
+            color: #888;
             text-align: center;
             padding: 8px;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
+            font-family: var(--header-font);
+            transition: all 0.2s ease;
         }
 
         .tool-badge:hover {
-            background: var(--accent-color);
-            color: #000;
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: #111;
             cursor: default;
         }
 
         /* Action Buttons */
         .actions {
-            margin-top: 40px;
+            margin-top: 50px;
             display: flex;
             gap: 20px;
-            justify-content: center;
+            justify-content: flex-start;
             flex-wrap: wrap;
         }
 
         .btn {
             text-decoration: none;
-            padding: 15px 30px;
+            padding: 12px 25px;
             font-family: var(--header-font);
             font-weight: bold;
             text-transform: uppercase;
-            border: 2px solid var(--accent-color);
-            transition: 0.3s;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            position: relative;
         }
 
+        /* ISO Download - High Contrast White Block */
         .btn-download {
             background-color: var(--accent-color);
             color: #000;
+            border: 1px solid var(--accent-color);
         }
 
         .btn-download:hover {
-            background-color: transparent;
+            background-color: #000;
             color: var(--accent-color);
-            box-shadow: 0 0 15px var(--accent-color);
         }
 
+        /* Github - Outlined */
         .btn-github {
-            color: var(--accent-color);
+            color: #888;
             background-color: transparent;
+            border: 1px solid #444;
         }
 
         .btn-github:hover {
-            background-color: #1a1a1a;
-            color: #fff;
-            border-color: #fff;
+            border-color: var(--accent-color);
+            color: var(--accent-color);
         }
 
         footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #555;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            font-size: 0.75rem;
+            color: #444;
+            text-align: left;
         }
 
         /* Blinking Cursor Animation */
         @keyframes blink {
-            0% { opacity: 1; }
+            0%, 100% { opacity: 1; }
             50% { opacity: 0; }
-            100% { opacity: 1; }
         }
 
-        /* Scanline effect (Optional coolness) */
+        /* Subtle CRT Scanline effect */
         .scanlines {
             position: fixed;
             top: 0;
@@ -158,10 +183,10 @@
             height: 100%;
             background: linear-gradient(
                 to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.1) 50%,
-                rgba(0,0,0,0.1)
+                rgba(18, 16, 16, 0),
+                rgba(32, 32, 32, 0) 50%,
+                rgba(0, 0, 0, 0.25) 50%,
+                rgba(0, 0, 0, 0.25)
             );
             background-size: 100% 4px;
             pointer-events: none;
@@ -175,68 +200,63 @@
 
     <div class="container">
         <header>
+            <div class="prompt-line">[ShellOS] # ./execute_website</div>
             <h1>ShellOS</h1>
-            <p>The 13MB Handmade Linux Experiment</p>
+            <p>13MB. Handmade. Pure C.</p>
         </header>
 
         <section>
-            <h2>What is ShellOS?</h2>
+            <h2>> What is ShellOS?</h2>
             <p>
-                ShellOS is not just another minimal distribution. It is a proof-of-concept operating system 
-                where the core userspace is not borrowed from GNU or BusyBox, but <strong>built by hand</strong>.
+                ShellOS is an experimental Linux distribution. It discards the standard GNU coreutils and BusyBox environments in favor of a <strong>fully handmade userspace</strong>.
             </p>
             <p>
-                The goal was to understand the Linux kernel by building the bricks that sit on top of it. 
-                Everything from process initialization to file management is handled by custom C code, 
-                compiled statically for maximum portability and minimalism.
+                There are no complex libraries, no package managers, and no bloat. Just the Linux Kernel and a collection of C binaries written from scratch to understand how an operating system thinks.
             </p>
         </section>
 
         <section>
-            <h2>Handmade in C</h2>
+            <h2>> The Handmade Toolset</h2>
             <p>
-                While most distros package existing tools, ShellOS features a custom suite of utilities written specifically for this project. 
-                There is no glibc bloat here. The following tools were coded from scratch:
+                Every command you type is a custom C program compiled statically. This ensures total independence from shared libraries.
             </p>
             <div class="tools-grid">
-                <div class="tool-badge">shell</div>
-                <div class="tool-badge">init</div>
-                <div class="tool-badge">ls</div>
-                <div class="tool-badge">echo</div>
-                <div class="tool-badge">cat</div>
-                <div class="tool-badge">rm</div>
-                <div class="tool-badge">rmdir</div>
-                <div class="tool-badge">mkdir</div>
-                <div class="tool-badge">clear</div>
-                <div class="tool-badge">minifetch</div>
-                <div class="tool-badge">poweroff</div>
-                <div class="tool-badge">reboot</div>
+                <div class="tool-badge">/bin/sh</div>
+                <div class="tool-badge">/bin/init</div>
+                <div class="tool-badge">/bin/ls</div>
+                <div class="tool-badge">/bin/echo</div>
+                <div class="tool-badge">/bin/cat</div>
+                <div class="tool-badge">/bin/rm</div>
+                <div class="tool-badge">/bin/rmdir</div>
+                <div class="tool-badge">/bin/mkdir</div>
+                <div class="tool-badge">/bin/clear</div>
+                <div class="tool-badge">/bin/poweroff</div>
+                <div class="tool-badge">/bin/reboot</div>
+                <div class="tool-badge">/bin/minifetch</div>
             </div>
         </section>
 
         <section>
-            <h2>The Shell</h2>
+            <h2>> The Shell</h2>
             <p>
-                The heart of ShellOS is its custom shell. Unlike Bash or Zsh, which are complex programs with thousands of features, 
-                the ShellOS shell focuses on the absolute essentials required to navigate a system.
+                The ShellOS shell is a minimalist command interpreter. It handles execution, path resolution, and argument parsing without the overhead of Bash. 
             </p>
             <p>
-                It features a custom tokenizer for command parsing, built-in implementations of <code>cd</code> and <code>exit</code>, 
-                and direct path execution. It serves as the primary interface between the user and the kernel.
+                It includes internal implementations for <code>cd</code>, and directly interfaces with the kernel to launch your processes.
             </p>
         </section>
 
         <div class="actions">
             <a href="https://github.com/ENux-Distro/ShellOS/releases/download/ShellOS-1.0/ShellOS.iso" class="btn btn-download">
-                Download ISO (13MB)
+                [ Download ISO ]
             </a>
             <a href="https://github.com/ENux-Distro/ShellOS" class="btn btn-github">
-                Get Started / Source
+                cat README.md
             </a>
         </div>
 
         <footer>
-            <p>&copy; 2024 ShellOS Project. Built with C and Curiosity.</p>
+            <p>2026 ShellOS | Made by the Developer of ENux</p>
         </footer>
     </div>
 
