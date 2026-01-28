@@ -8,6 +8,7 @@
   - cd
   - ls
   - rm
+  - clear
   - rmdir
   - cat
   - echo
